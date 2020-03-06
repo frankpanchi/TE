@@ -37,7 +37,7 @@ public class Procedimiento {
 
     public void InsertarVenta(int idVend, int idSucur, int idCiud, int idCliente, int[] productos, int[] cant, int dia, int mes, int year) throws ClassNotFoundException, SQLException {
         Class.forName("oracle.jdbc.OracleDriver");
-        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE ", "system", "francisco7599");
+        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE ", "system", "admin");
        ArrayDescriptor cantArray = ArrayDescriptor.createDescriptor("ARRAY_INT", con);
         ArrayDescriptor des = ArrayDescriptor.createDescriptor("ARRAY_PROD", con);
         ARRAY arrayProd = new ARRAY(des, con, productos);

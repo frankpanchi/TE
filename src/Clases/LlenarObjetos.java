@@ -28,6 +28,26 @@ public class LlenarObjetos {
 
     public LlenarObjetos() {
     }
+    public void mostrarClient(JComboBox<Cliente> comboClie){
+        try {
+          // Conexion con = new Conexion();
+            s=conn.getConnection().prepareStatement("SELECT id_cliente, nombre FROM cliente_d");
+            rs=s.executeQuery();
+            ResultSetMetaData rsmd=rs.getMetaData();
+             while(rs.next())
+            {
+                 comboClie.addItem(
+                        new Cliente(
+                                rs.getString("nombre"),
+                                 rs.getString("id_cliente")
+                        )
+                );
+            }
+        } catch (Exception ex) {
+          //  Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "ERROR AL MOSTRAR LOS clientes");
+        }
+    }
     
    public void mostrarVendedores(JComboBox<Vendedor> comboVendedor){
         try {

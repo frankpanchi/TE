@@ -6,6 +6,7 @@
 package parcial;
 
 import Clases.Vendedor;
+import Clases.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,21 +39,19 @@ public final class principal extends javax.swing.JFrame {
     DefaultTableModel dtm;
     LlenarObjetos objLlenar = new LlenarObjetos();
     Procedimiento objProd = new Procedimiento();
-    int id, idProd, cant,idsucursal, idciudad;
+    int id, idProd, cant, idsucursal, idciudad, idCliente;
     DefaultTableModel modelo;
     double precio;
     int ite = 0;
     String[] camposRepresentante;
-    
-       Calendar fecha = Calendar.getInstance();
-        int anho = fecha.get(Calendar.YEAR);
-        int mes = fecha.get(Calendar.MONTH);
-        int dia = fecha.get(Calendar.DATE);
+
+    Calendar fecha = Calendar.getInstance();
+    int anho = fecha.get(Calendar.YEAR);
+    int mes = fecha.get(Calendar.MONTH);
+    int dia = fecha.get(Calendar.DATE);
 //        String mon = String.valueOf(mes);
 //      String year = String.valueOf(anho);
 //        String day = String.valueOf(dia);
-    
-    
 
     /**
      * Creates new form principal
@@ -61,15 +60,15 @@ public final class principal extends javax.swing.JFrame {
         initComponents();
 
         LlenarTablaVenta();
-       
+
         objLlenar.mostrarVendedores(cbvendedor);
         objLlenar.mostrarSucursales(cbsucursal);
-         objLlenar.mostrarCiudad(cbciudad);
+        objLlenar.mostrarCiudad(cbciudad);
+        objLlenar.mostrarClient(cbCliente);
         modelo = null;
-        
-     mes = mes+1;
-      txtfecha.setText(dia + "-"+mes +"-"+anho);
-     
+
+        mes = mes + 1;
+        txtfecha.setText(dia + "-" + mes + "-" + anho);
 
     }
 
@@ -93,7 +92,7 @@ public final class principal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableVend = new javax.swing.JTable();
-        cbvendedor = new javax.swing.JComboBox<>();
+        cbvendedor = new javax.swing.JComboBox<Vendedor>();
         jLabel1 = new javax.swing.JLabel();
         txtproducto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -107,10 +106,12 @@ public final class principal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         btnVentaFinal = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        cbsucursal = new javax.swing.JComboBox<>();
+        cbsucursal = new javax.swing.JComboBox<Sucursal>();
         jLabel12 = new javax.swing.JLabel();
-        cbciudad = new javax.swing.JComboBox<>();
+        cbciudad = new javax.swing.JComboBox<Ciudad>();
         txtfecha = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        cbCliente = new javax.swing.JComboBox<Cliente>();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -251,6 +252,15 @@ public final class principal extends javax.swing.JFrame {
             }
         });
 
+        jLabel21.setText("Cliente");
+
+        cbCliente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { }));
+        cbCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbClienteMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -275,20 +285,31 @@ public final class principal extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtprecio, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24)
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbsucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbciudad, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel21)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(24, 24, 24)
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbsucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbciudad, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(39, 39, 39)
+                                        .addComponent(txtfecha, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,17 +320,18 @@ public final class principal extends javax.swing.JFrame {
                             .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btnVentaFinal))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(txtfecha, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnVentaFinal)))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(txtfecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel21))
+                    .addComponent(txtfecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -719,7 +741,7 @@ public final class principal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -740,7 +762,7 @@ public final class principal extends javax.swing.JFrame {
         }
         camposRepresentante[0] = idProd + "";
         camposRepresentante[1] = txtproducto.getText();
-        camposRepresentante[2] = cant + "";
+        camposRepresentante[2] = txtcant.getText();
         camposRepresentante[3] = precio + "";
         modelo.addRow(camposRepresentante);
         tableVentaFinal.setModel(modelo);
@@ -753,7 +775,8 @@ public final class principal extends javax.swing.JFrame {
         } else {
             id = Integer.parseInt(cbvendedor.getItemAt(cbvendedor.getSelectedIndex()).getId() + "");
             idsucursal = Integer.parseInt(cbsucursal.getItemAt(cbsucursal.getSelectedIndex()).getId() + "");
-             idciudad = Integer.parseInt(cbciudad.getItemAt(cbciudad.getSelectedIndex()).getId() + "");
+            idciudad = Integer.parseInt(cbciudad.getItemAt(cbciudad.getSelectedIndex()).getId() + "");
+            idCliente = Integer.parseInt(cbCliente.getItemAt(cbCliente.getSelectedIndex()).getId() + "");
             int[] nuevoArray = new int[tableVentaFinal.getRowCount()];
             int[] nuevoArrayD = new int[tableVentaFinal.getRowCount()];
             for (int i = 0; i <= tableVentaFinal.getRowCount() - 1; i++) {
@@ -763,7 +786,7 @@ public final class principal extends javax.swing.JFrame {
                 nuevoArrayD[i] = cantid;
             }
             try {
-                objProd.InsertarVenta(id, idsucursal, idciudad, 1, nuevoArray, nuevoArrayD, dia, mes, anho);
+                objProd.InsertarVenta(id, idsucursal, idciudad, idCliente, nuevoArray, nuevoArrayD, dia, mes, anho);
                 JOptionPane.showMessageDialog(this, "vendidos con éxito");
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
@@ -779,8 +802,8 @@ public final class principal extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tableVend.getModel();
         txtproducto.setText(String.valueOf(modelo.getValueAt(tableVend.getSelectedRow(), 1) + ""));
         idProd = Integer.parseInt(String.valueOf(modelo.getValueAt(tableVend.getSelectedRow(), 0) + ""));
-        cant = Integer.parseInt(String.valueOf(modelo.getValueAt(tableVend.getSelectedRow(), 4) + ""));
-        precio = Integer.parseInt(String.valueOf(modelo.getValueAt(tableVend.getSelectedRow(), 5) + ""));
+        cant = Integer.parseInt(String.valueOf(modelo.getValueAt(tableVend.getSelectedRow(), 5) + ""));
+        precio = Integer.parseInt(String.valueOf(modelo.getValueAt(tableVend.getSelectedRow(), 4) + ""));
         txtcant.setText(cant + "");
         txtprecio.setText(precio + "");
     }//GEN-LAST:event_tableVendMouseClicked
@@ -794,7 +817,7 @@ public final class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cbciudadMouseClicked
 
     private void btnvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvendedorActionPerformed
-         LlenarTablaVendedor();
+        LlenarTablaVendedor();
     }//GEN-LAST:event_btnvendedorActionPerformed
 
     private void txtdiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdiaActionPerformed
@@ -831,68 +854,68 @@ public final class principal extends javax.swing.JFrame {
 
     private void txtdiaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdiaKeyTyped
         char c = evt.getKeyChar();
-        if(txtdia.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        if (txtdia.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtdiaKeyTyped
 
     private void txtmesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmesKeyTyped
-         char c = evt.getKeyChar();
-        if(txtmes.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtmes.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtmesKeyTyped
 
     private void txtyearKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtyearKeyTyped
         char c = evt.getKeyChar();
-        if(txtyear.getText().length()==4)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        if (txtyear.getText().length() == 4) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtyearKeyTyped
 
     private void txtdia2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdia2KeyTyped
         char c = evt.getKeyChar();
-        if(txtdia2.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        if (txtdia2.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtdia2KeyTyped
 
     private void txtmes2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmes2KeyTyped
         char c = evt.getKeyChar();
-        if(txtmes2.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        if (txtmes2.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtmes2KeyTyped
 
     private void txtyear2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtyear2KeyTyped
-         char c = evt.getKeyChar();
-        if(txtyear2.getText().length()==4)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtyear2.getText().length() == 4) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtyear2KeyTyped
 
     private void txtdiaCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdiaCActionPerformed
@@ -900,29 +923,29 @@ public final class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtdiaCActionPerformed
 
     private void txtdiaCKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdiaCKeyTyped
-         char c = evt.getKeyChar();
-        if(txtdiaC.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtdiaC.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtdiaCKeyTyped
 
     private void txtmesCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtmesCActionPerformed
-        
+
     }//GEN-LAST:event_txtmesCActionPerformed
 
     private void txtmesCKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmesCKeyTyped
-           char c = evt.getKeyChar();
-        if(txtmesC.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtmesC.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtmesCKeyTyped
 
     private void txtyearCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtyearCActionPerformed
@@ -930,14 +953,14 @@ public final class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtyearCActionPerformed
 
     private void txtyearCKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtyearCKeyTyped
-      char c = evt.getKeyChar();
-        if(txtyearC.getText().length()==4)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtyearC.getText().length() == 4) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtyearCKeyTyped
 
     private void txtdia2CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdia2CActionPerformed
@@ -945,14 +968,14 @@ public final class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtdia2CActionPerformed
 
     private void txtdia2CKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdia2CKeyTyped
-            char c = evt.getKeyChar();
-        if(txtdia2C.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtdia2C.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtdia2CKeyTyped
 
     private void txtmes2CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtmes2CActionPerformed
@@ -960,14 +983,14 @@ public final class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtmes2CActionPerformed
 
     private void txtmes2CKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmes2CKeyTyped
-       char c = evt.getKeyChar();
-        if(txtmes2C.getText().length()==2)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        char c = evt.getKeyChar();
+        if (txtmes2C.getText().length() == 2) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtmes2CKeyTyped
 
     private void txtyear2CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtyear2CActionPerformed
@@ -976,18 +999,22 @@ public final class principal extends javax.swing.JFrame {
 
     private void txtyear2CKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtyear2CKeyTyped
         char c = evt.getKeyChar();
-        if(txtyear2C.getText().length()==4)
-        {
-          evt.consume();
-        Toolkit.getDefaultToolkit().beep();
-        }
-        if(c<'0' || c>'9')
+        if (txtyear2C.getText().length() == 4) {
             evt.consume();
+            Toolkit.getDefaultToolkit().beep();
+        }
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtyear2CKeyTyped
 
     private void btnclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnclienteActionPerformed
-         LlenarTablaCliente();
+        LlenarTablaCliente();
     }//GEN-LAST:event_btnclienteActionPerformed
+
+    private void cbClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbClienteMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbClienteMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1058,20 +1085,20 @@ public final class principal extends javax.swing.JFrame {
 
     public void LlenarTablaVendedor() {
         try {
-            
-             int dia = Integer.parseInt(txtdia.getText());
-             int mes = Integer.parseInt(txtmes.getText());
-             int anho = Integer.parseInt(txtyear.getText());
-             int dia2 = Integer.parseInt(txtdia2.getText());
-             int mes2 = Integer.parseInt(txtmes2.getText());
-             int anho2 = Integer.parseInt(txtyear2.getText());
+
+            int dia = Integer.parseInt(txtdia.getText());
+            int mes = Integer.parseInt(txtmes.getText());
+            int anho = Integer.parseInt(txtyear.getText());
+            int dia2 = Integer.parseInt(txtdia2.getText());
+            int mes2 = Integer.parseInt(txtmes2.getText());
+            int anho2 = Integer.parseInt(txtyear2.getText());
             DefaultTableModel modelo = new DefaultTableModel();
             this.jTable4.setModel(modelo);
             s = conn.getConnection().prepareStatement("select v.nombre || ' ' || v.apellido as vendedor, sum(vd.total) as total, v.nombre from hechos_venta_d hv\n"
                     + "inner join vendedor_d v on v.id_vendedor = hv.id_vendedor\n"
                     + "inner join venta_d vd on vd.id_venta = hv.id_venta\n"
                     + "inner join tiempo_d t on t.id_tiempo= hv.id_tiempo\n"
-                    + "where v.id_vendedor = hv.id_vendedor  and dia between "+ dia + " and "+ dia2 +" and mes BETWEEN " + mes + " and " + mes2 + " and anho BETWEEN "+ anho + " and " + anho2 + " \n" 
+                    + "where v.id_vendedor = hv.id_vendedor  and dia between " + dia + " and " + dia2 + " and mes BETWEEN " + mes + " and " + mes2 + " and anho BETWEEN " + anho + " and " + anho2 + " \n"
                     + " GROUP BY total, v.nombre || ' ' || v.apellido, ' ', v.nombre");
             rs = s.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -1099,18 +1126,18 @@ public final class principal extends javax.swing.JFrame {
     public void LlenarTablaCliente() {
         try {
             int diaC = Integer.parseInt(txtdiaC.getText());
-             int mesC = Integer.parseInt(txtmesC.getText());
-             int anhoC = Integer.parseInt(txtyearC.getText());
-             int dia2C = Integer.parseInt(txtdia2C.getText());
-             int mes2C = Integer.parseInt(txtmes2C.getText());
-             int anho2C = Integer.parseInt(txtyear2C.getText());
+            int mesC = Integer.parseInt(txtmesC.getText());
+            int anhoC = Integer.parseInt(txtyearC.getText());
+            int dia2C = Integer.parseInt(txtdia2C.getText());
+            int mes2C = Integer.parseInt(txtmes2C.getText());
+            int anho2C = Integer.parseInt(txtyear2C.getText());
             DefaultTableModel modelo = new DefaultTableModel();
             this.jTable5.setModel(modelo);
             s = conn.getConnection().prepareStatement("select c.nombre || ' ' || c.apellido as Cliente, sum(vd.total) as total, c.nombre from hechos_venta_d hv\n"
                     + "inner join cliente_d c on c.id_cliente = hv.id_cliente\n"
                     + "inner join venta_d vd on vd.id_venta = hv.id_venta\n"
                     + "inner join tiempo_d t on t.id_tiempo= hv.id_tiempo\n"
-                    + "where c.id_cliente = hv.id_cliente and dia between "+ diaC + " and "+ dia2C +" and mes BETWEEN " + mesC + " and " + mes2C + " and anho BETWEEN "+ anhoC + " and " + anho2C + " \n"
+                    + "where c.id_cliente = hv.id_cliente and dia between " + diaC + " and " + dia2C + " and mes BETWEEN " + mesC + " and " + mes2C + " and anho BETWEEN " + anhoC + " and " + anho2C + " \n"
                     + "GROUP BY total, c.nombre || ' ' || c.apellido, ' ', c.nombre");
             rs = s.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -1140,6 +1167,7 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JButton btncliente;
     private javax.swing.JButton btnvendedor;
     private javax.swing.JButton btnventa;
+    private javax.swing.JComboBox<Cliente> cbCliente;
     private javax.swing.JComboBox<Ciudad> cbciudad;
     private javax.swing.JComboBox<Sucursal> cbsucursal;
     private javax.swing.JComboBox<Vendedor> cbvendedor;
@@ -1156,6 +1184,7 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1201,5 +1230,4 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JTextField txtyear2C;
     private javax.swing.JTextField txtyearC;
     // End of variables declaration//GEN-END:variables
-}
-;
+};
